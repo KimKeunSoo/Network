@@ -1,5 +1,13 @@
 # SDN
 
+Control Plane과 Data Plane이 물리적으로 분리된 아키택쳐이다.
+
+Control Plane : SW적인 요소들은 Controller Application으로 동작하는 개념
+
+Data Plane : HW적인 관점으로 Control Plane에 의해 통제를 받아서 동작하는 개념
+
+
+
 필요 이유
 
 1. 운영 자동화화 중앙관리의 어려움
@@ -70,13 +78,10 @@ Control Plane Interface ----> Openflow로 예시를 둘 수 있음
         반가상화는 하드웨어를 완전히 가상화하지 않는다. 전가상화의 가장 큰 단점인 성능저하의 문제를 해결하기 위해 하이퍼콜(Hyper Call)이라는 인터페이스를 통해 하이퍼바이저에게 직접 요청 가능. 각 OS들이 각각 다른 하이퍼콜을 가짐.
 
         - 장점 : 모든 명령을 DOM0를 통해 하이퍼바이저에게 요청하는 전가상화에 비해 성능이 빠름
-        - 단점 : 하이퍼바이저에게 Hyper Call 요청을 할 수 있도록 각 OS의 커널을 수정해야하며 오픈소스 OS가 아니면 반가상화를 이용하기가 쉽지 않
-        - 
-        - 
-        - 음
-
+        - 단점 : 하이퍼바이저에게 Hyper Call 요청을 할 수 있도록 각 OS의 커널을 수정해야하며 오픈소스 OS가 아니면 반가상화를 이용하기가 쉽지 않음
      
-
+     
+   
 3. **컨테이너 가상화**
 
    호스트 OS위에 컨테이너 관리 스프트웨어를 설치하여, 논리적으로 컨테이너를 나누어 사용한다. 컨테이너는 애플리케이션 동작을 위한 라이브러리와 애플리케이션등으로 구성되기 때문에 이를 각각 개별 서버처럼 사용이 가능하다.
@@ -85,7 +90,11 @@ Control Plane Interface ----> Openflow로 예시를 둘 수 있음
 
    - 장점 : 컨테이너 가상화는 오버헤드가 적어 가볍고 빠른 장점이 있음
 
+
+
 ## OpenFlow
+
+: Controller(Control Plane)과 Switch(Data Plane)간 서로 통신할 수 있는 표준 규격.
 
 #### OpenFlow Protocol Message
 
@@ -94,10 +103,10 @@ Control Plane Interface ----> Openflow로 예시를 둘 수 있음
 1. **Controller-to-Switch** : 스위치의 상태나 관리를 점검하기 위해 사용
 
    - Features : Openflow Channel을 형성할 때 사용, 스위치 용량 확인
-     - Feature Request : Controller -> Switch , 응답요청
-     - Feature Reply : Switch -> Controller, 응답보고
+     - Feature Request : Controller -> Switch , 응답요청 / 어느 포트가 사용가능한지 물어봄
+     - Feature Reply : Switch -> Controller, 응답보고 
        - 수행가능한 Action 값, Port 연결속도, Duplex 정보등등을 담고 있음
-   - Configuration 
+   - Configuration (Set Config) : Controller -> Switch, flow expirations 를 보내기 위함.
    - Packet Out : Packet In Message 통해 스위치로 부터 수신한 패킷을 해당 스위치 상의 특정한 포트로 전송하기 위해 사용
    - Barrier
 
@@ -113,7 +122,7 @@ Control Plane Interface ----> Openflow로 예시를 둘 수 있음
 
 3. **Symmetric** : Controller&Switch 모두 생성, 상대방의 요청 없이도 전송
 
-   - Hello : Controller -- Switch 간에 연결을 시작할때 사용
+   - Hello : Controller -- Switch 간에 연결을 시작할때 사용, TCP handshake에 따라서 Controller는 Switch에게 버전 번호를 보내고 Switch는 가능 버전 번호를 응답합니다.
    - Echo :  Controller -- Switch 간 연결에 이상없음을 확인하기위해 사용
      - Echo에 대해 답변으로 Echo Reply를 전송
    - Experimenter
@@ -188,6 +197,45 @@ Switch 포트의 status 정보를 Switch --> Controller 보내면서 Topology Di
 2. Controller는 Topology 수정 후 다른 경로 계산
 3. Switch에게 Flow Modification Message 를 전송
 4. Flow Modification Message의 command field를 보면 flow entry의 Output Action을 수정하는것을 볼 수 있음
+
+### OpenFlow의 Flow Table
+
+Flow Table의 entry는 Header fields, Counters, Actions 필드로 구성되어 있음
+
+Controller는 관리를 하기 전에 패킷 정책에 대한 Flow Table을 내림
+
+
+
+1. Header Fields
+
+   ![클라우드 네트워크 관리 기술, OpenFlow](README%20assets/helloworld-387756-4.png)
+
+   - Ingress Port : 수신 포트, 포트번호 1부터 시작하여 표현함
+   - Ethernet source address
+   - Ethernet destination address
+   - Ethernet type : 802.2의 SNAP 헤더와 OUI / 802.3의 SNAP 헤더가 없는 0x05FF 이 일치해야함
+   - VLAN id
+   - VLAN priority : VLAN PCP field
+   - IP source address
+   - IP destination address
+   - IP protocol(8) : ARP 옵션코드의 경우 하위 8비트만이 사용됨
+   - IP ToS bits(6) : 8비트 값으로 지정하고 ToS를 상위 6비트에 배치
+   - TCP/UDP같은 전송 sorce port(16) : ICMP 타입일 경우 하위 8비트만 사용
+   - TCP/UDP같은 전송 destination port(16) : ICMP 타입일 경우 하위 8비트만 사용
+
+
+
+2. Counters
+
+   Counter는 table, flow, port, queue 별로 관리함
+
+   상세 설명 생략
+
+3. Actions
+
+   상세 설명 생략
+
+   
 
 # Protocol
 
