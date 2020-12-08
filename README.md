@@ -247,8 +247,7 @@ Controller는 관리를 하기 전에 패킷 정책에 대한 Flow Table을 내�
    3. IGRP X
 4. EGP
    1. BGP X
-
-
+5. SIP X
 
 ## ARP (Address Resloution Protocol)
 
@@ -348,6 +347,44 @@ IGP(Interior Gateway Protocol)에 속하며 동일 자치시스템(AS, Autonomou
 
 
 
+## SIP
+
+SIP(Session Initiation Protocol)는 '세션 설정 프로토콜'이다. RFC 3261로 권고되어있으며, 멀티미디어 세션의 생성, 변경, 종료에 대한 응용 계층의 프로토콜이다. 멀티미디어 데이터 전송 자체보다는 Signaling을 통한 멀티미디어 통신 관리인 세션 제어에 중점을 두고 있음. URL 및 E-mail 형식의 텍스트 기반 어드레싱 방법을 사용하므로 메시지 파싱이나 확장이 용이하다. 보통은 UDP를 주로 사용하지만 현재는 TCP를 더 많이 사용함. 5060과 5061 포트 이용
+
+![img](README%20assets/R1280x0)
+
+SIP 메시지는 가변 길이의 텍스트로 만들어지며 SIP Header와 Message Body로 구성됨.
+
+- SIP Header :  뒤에 올 Message Body의 종류를 표시
+- Message Body : 옵션 필드로 있을 수도 있고 없을 수도 있음.
+
+
+
+![img](README%20assets/133BC5144B40801513)
+
+SIP 프로토콜 스택은 위와 같다. TCP/UDP 상위에 SIP, SDP, RTP등이 올라와있음. 
+
+- SDP(Session Description Protocol) : 멀티미디어 세션 파라미터 설정
+- Audio / Video Codec : 음성/영상 코딩 담당, 다양한 시스템과 호환을 위해 여러 규격 존재
+- RTP/RTCP(Realtime Transport (Control) Protocol ) : 실시간 통신
+
+
+
+![img](README%20assets/203D0F1D4B4084ADDD)
+
+SIP 구성요소간 상호 관계는 다음과 같다. 구성요소는 두가지로 나뉘어진다.
+
+- SIP 클라이언트
+  - UAC(User Agent Client) : 세션 종단에 위치하며 Call을 생성하고 설정 요청
+  - UAS(User Agent Server) : UAC로부터 Call을 수락하거나 거절 또는 Redirect
+- SIP 서버 : UA간 직접 호츨이 가능하지만 SIP 서버를 둠으로써 확장성을 제공
+  - Proxy Server : UAC로부터 SIP Call을 받아 자신이 Call을 대신 만들어줌
+  - Register Server : User Agent로 부터 레지스터 요청을 수신하여 사용자의 위치 정보 유지
+  - Redirect Server : 사용자가 직접 요청을 할 수 있는 상대방의 URL을 알려줌
+  - Location Server : Proxy Server나 Redirect Server로부터 SIP Call의 목적지 노드의 주소가 요청되면 이를 Resolution 해주는 역할을 함
+
+*세무 설명 SIP 메시지나 세션 흐름 생략
+
 
 
 ## REST
@@ -438,3 +475,23 @@ ex) GET : /users/{userid}/devices
 **RESTful**
 
 : REST 아키텍처를 구현한 웹 서비스를 나타내는 용어
+
+
+
+
+
+# IEEE 802.11
+
+|                            | **IEEE  802.11n**        | **IEEE  802.11ac**  | **IEEE  802.11ax**  | **IEEE  802.11ax**  |
+| -------------------------- | ------------------------ | ------------------- | ------------------- | ------------------- |
+| Spectrum Bands             | 2.4GHz & 5GHz            | 5GHz                | 2.4GHz & 5GHz       | 2.4, 5 & 6 GHz      |
+| Channel bandwidth (MHz)    | 20, 40                   | (n), 80, 80+80, 160 | (ac)                | (ax), 320           |
+| Subcarrier spacing (KHz)   | 312.5                    | 312.5               | 78.125              | 78.125              |
+| Symbol time (us)           | 3.2                      | 3.2                 | 12.8                | 12.8                |
+| Guard interval (us)        | 0.8                      | 0.8, 0.4            | 0.8, 1.6, 3.2       | 0.8, 1.6, 3.2       |
+| MU-MIMO                    | No                       | Downlink            | Uplink and Downlink | Uplink and Downlink |
+| MIMO order                 | 4                        | 8                   | 8                   | 16                  |
+| Modulation                 | OFDM                     | OFDM                | OFDM, OFDMA         | OFDM, OFDMA         |
+| Data subcarrier modulation | BPSK, QPSK, 16QAM, 64QAM | (n), 256QAM         | (ac), 1024 QAM      | (ax), 4K QAM        |
+
+# IEEE 802.15
