@@ -494,4 +494,117 @@ ex) GET : /users/{userid}/devices
 | Modulation                 | OFDM                     | OFDM                | OFDM, OFDMA         | OFDM, OFDMA         |
 | Data subcarrier modulation | BPSK, QPSK, 16QAM, 64QAM | (n), 256QAM         | (ac), 1024 QAM      | (ax), 4K QAM        |
 
-# IEEE 802.15
+
+
+
+
+# RTP
+
+**RTP(Real-time Transport Protocol)**은 **IP 네트워크 상에서 오디오와 비디오를 전달하기 위한 통신 프로토콜**이다. 전화, 그리고 WebRTC, 텔레비전 서비스, 웹 기반 push-to-talk 기능을 포함한 화상 통화 분야 등의 스트리밍 미디어를 수반하는 통신, 엔터테이먼트 시스템에 사용된다.
+
+일반적으로 UDP위에서 동작하며 RTCP(RTP Control Protocol)와 결합하여 사용. RTP는 오디오/비디오와 같은 미디어 스트림을 전달하는 반면, RTCP는 전송 통계와 QoS를 모니터링하고 다중 스트림의 동기화를 도와준다. 
+
+SIP(Session Initiation Protocol)과 같은 시그널링 프로토콜과 결합해서 사용하기도 한다.
+
+![img](README%20assets/1381_1.JPG)
+
+1. IP/UDP에 실린 RTP 구조
+   ![img](README%20assets/3394_1.JPG)
+
+   
+
+2. RTP 패킷 구조
+   ![img](README%20assets/3394_2.JPG)
+
+   
+
+3. RTP 패킷 각 필드별 설명
+
+   - 제어 비트 (9 비트)
+     - Ver : 2 비트
+       현재 RTP 버젼은, 2 (RFC 3550)
+
+     - P (padding) : 1 비트
+       1 : 실제 유료부하 끝에 덧붙여진 패딩 데이터 있음
+       	응용프로그램이 32 비트 같은 정수배 단위로 RTP 패킷 페이로드 구성을 위함
+
+     - X (extension)   : 1 비트
+       1 : 가변길이 헤더 확장(Extension Header)이 있음을 나타냄
+
+     - CC (CSRC Count) : 4 비트
+       기본 헤더 바로 뒤에 나타나는 CSRC(Countributing SouRCe) ID의 갯수
+       여러 미디어가 합성되는 경우에, 그 개수를 CC로써 나타내고, 모두의 기준 동기를 맞추려면 SRRC ID로써 이를 나타냄
+
+     - M (Marker)      : 1 비트
+       . 이벤트 발생이 시작되었음을 알림
+
+       
+
+   - Payload type : (7 비트)  오디오/비디오 인코딩(코덱) 종류
+
+     - 오디오 타입 번호 (예시)
+       . 0 -> G.711 PCM(mu-law), 샘플링주파수 8000 Hz
+       . 3 -> GSM,               샘플링주파수 8000 Hz
+       . 4 -> G.723,             샘플링주파수 8000 Hz
+       . 6 -> DVI4 (ADPCM),      샘플링주파수 16000 Hz
+       . 7 -> LPC,               샘플링주파수 8000 Hz
+       . 8 -> G.711 PCM(A-Law)   샘플링주파수 8000 Hz
+       . 9 -> G.722,             샘플링주파수 8000 Hz
+       . 14 -> MPEG 오디오,      샘플링주파수 90000 Hz
+       . 15 -> G.728,            샘플링주파수 8000 Hz
+
+     - 비디오 타입 번호 (예시)
+       . 26 -> 화상 JPEG, 31 -> H.261, 32 -> MPEG-1 또는 MPEG-2 비디오, 
+       . 33 -> MPEG-2 TS 등
+
+     - 기타 임의 지정 가능(dynamic payload type) : 96~127
+
+     - RTP 내 Payload type 표준 목록 ☞ IANA RTP Parameters
+           . RFC 3551에서 오디오 신호/비디오 신호의 인코딩 방법,샘플링 주파수 등이 기술됨
+
+       
+
+   - Sequence number : (16 비트)
+
+          - 패킷 손실 검출 및 순서 재구성 
+             
+          - 초기값은 랜덤이고, 매 패킷 마다 1씩 증가
+             
+          - 수신측은 패킷 재전송 요청 보다는 패킷 손실 검출 및 뒤바뀐 순서 복구를 위함
+             
+             
+
+        - Timestamp : (32 비트)
+                - RTP 스트림 내 각 RTP 패킷이 샘플링된 시간관계를 나타냄
+                   랜덤한 초기값부터 시작하며, 통상적으로 카운터에 의해 1씩 증가시킴
+                   
+                - 타임스탬프 간격은 Payload Type에 따라 정해진 샘플링 간격을 기준 
+                   . 대부분의 오디오 RTP 패킷의 경우 => 1 패킷 당 디폴트 시간 간격을 20 ms으로 함
+                      예시) G.711 (PCM A-Law) 오디오 페이로드 패킷 크기 
+                               = (유료부하 코덱 데이터율) x (1 패킷 당 시간 간격)
+                               = (64 kbps G.711 코덱) x (20 ms)
+                               = (8000 samples x 8 bits)/sec x (0.02 sec)
+                               = 160 바이트
+                   
+            - 타임스탬프 값의 연속성 의미 구분
+               . 예1) 일련의 패킷들의 타임스탬프 값이 같은 경우 : 특정 비디오 장면이 같은 시간에 샘플링되었음을 의미
+               . 예2) 일련의 패킷들의 타임스탬프 값이 단순 증가하지 않는 경우 : MPEG 화면 픽처 처럼 시간 순서가 어긋나며 전후 화면으로부터 예측되었음을 의미
+               . 예3) 일련의 패킷들의 타임스탬프 값이 연속 증가되는 번호 순서를 갖음 : 오디오 패킷 흐름일 경우 등
+               
+               
+           
+    - 동기 발신 식별자 (SSRC ID, Synchronization SouRCe ID) : (32 비트)
+       
+        - 원래의 정보 스트림에 대한 식별 (즉, RTP 세션에서 소스 구분하는 고유 번호)
+           하나의 RTP 세션 내에서는, 
+           		각각의 발송지는 무작위로 선택된 SSRC ID로 나타내고, 
+           		다만, 타 발송지와의 구별을 위해 중복 불허하며, 
+           		결국, 하나의 웹브라우저에서 2개 동영상 가능 등
+           
+           
+       
+    - 기여 발신 식별자 (CSRC ID, Contributor SouRCe ID) 목록 : (32 비트) 1 이상 가변 갯수
+       
+        - 믹서(Mixer)를 통해 혼합되어 단일의 정보열로 되면, 원래의 각각에 대한 식별 역할
+           . 여러 미디어가 혼합되면, CC(CSRC Count:4 비트)에 총 개수를 지정하고, 
+           . SSRC 외에, 추가된 스트림들에 대한 식별자를 CSRC ID 값으로 함
