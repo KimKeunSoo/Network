@@ -387,6 +387,109 @@ SIP 구성요소간 상호 관계는 다음과 같다. 구성요소는 두가지
 
 
 
+## SDP
+
+: Session Description Protocol, 멀티미디어 세션 파라미터를 협상하는 프로토콜.
+
+
+
+SIP 프로토콜이 시그널링에 대해 정의, SDP 프로토콜이 Capability Exchange에 대해 정의함.
+
+SIP는 요청&응답 ( Request & Response ) 모델로 정의하였음.
+
+SDP는 제안&수락 ( Offer & Answer ) 모델로 정의하였음.
+
+SDP는 SIP 뿐만 아니라 MGCP와 Megaco에서도 사용함.
+
+
+
+![image-20201222173957606](README%20assets/image-20201222173957606.png)
+
+SDP는 Capability를 협상하기 위해 SIP call flow 절차를 활용함. SIP의 요청&응답 ( Request & Response ) 에서 사용되는  SIP 메시지 바디에 포함되어 전달함. 예를 들어, SIP INVITE 메시지에 SDP Offer가 포함되고 200 OK 응답 메시지에 SDP Answer가 포함됨.
+
+
+
+#### SDP 메시지 분석
+
+SDP는 멀티미디어를 전달하는 RTP 프로토콜에 대한 세부적인 내용을 협상함. SDP는 SIP와 다른 메시지 포맷을 사용하지만 텍스트 기반이므로 이해하기 쉬움.
+
+```
+v = 0
+o = alice 2890844526 2890844526 IN IP4 atlanta.com
+s =
+c = IN IP4 10.1.3.33
+t = 0 0
+m = audio 49172 RTP/AVP 0 8 18 101
+a = rtpmap:0 PCMU/8000
+```
+
+1. ##### v = 0 (필수)
+
+   - SDP 프로토콜의 버전을 표시, SDP 버전은 0
+
+     
+
+2. ##### o = alice 2890844526 2890844526 IN IP4 atlanta.com (필수)
+
+   - SDP 메시지를 생상한 Owner/Creator를 표시
+
+   - 순서대로 Username, Session-ID, Session Version, Network Type, Address Type, Unicast Address
+
+     
+
+3. ##### s = (필수)
+
+   - 세션 이름 표시
+
+     
+
+4. ##### c = IN IP4 10.1.3.33 (옵션)
+
+   - RTP 프로토콜이 사용할 주소를 정의
+
+   - 순서대로 Network Type, Address Type, Connection-Address
+
+     
+
+5. ##### t = 0 0 (필수)
+
+   - Timing으로 start-time과 stop-time을 표시.
+
+   - 0 0 은 고정 세션을 의미
+
+     
+
+6. ##### m = audio 49172 RTP/AVP 0 8 18 101
+
+   - 어떤 Media를 쓸 것인지에 대한 설명
+   - 순서대로 Media, Port, Protocol, Format 
+   - Media : RTP 프로토콜의 페이로드가 무엇인지를 선언
+     - audio, video, text, application, message 중에 표시
+   - Port : 미디어가 전송될 전송 포트 표시
+     - UDP 16384 ~ 32767 사이의 번호를 무작위로 선택
+   - Protocol : UDP, RTP/AVP, RTP/SAVP 중에 표시
+     - AVP는 Audio Video Profile 의 약자
+   - Format : 미디어의 포맷을 서브 필드 a=으로 표시함을 의미
+     - Payload Type 0 8 18의 순서는 코덱 협상의 우선순위를 표시
+     - Payload Type 101은 DTMF 이벤트를 정의
+     - 여기서 0 8 18 101이 있으므로 세개의 우선순의의 미디어 속성이  3개의 a=rtpmap으로 표시되고 각자의 미디어 패킷 한개가 포함한 시간 정보인 a=ptime 3개가 있으며, 마지막에는 a=fmtp로 DTMF인 미디어 포맷에 대한 파라미터를 정의 
+
+7. ##### a = rtpmap:0 PCMU/8000
+
+   - 생략. . .  등등
+
+
+
+
+
+### 결론
+
+![image-20201222180348753](README%20assets/image-20201222180348753.png)
+
+결국,  여러개의 코덱 중 하나를 선택하는 과정에서 SDP와 SIP를 사용한다. 
+
+
+
 ## REST
 
 HTTP URI를 통해 자원을 명시, HTTP Method를 통해 자원에 대한 CRUD Operation을 적용을 의미. 
@@ -566,52 +669,52 @@ SIP(Session Initiation Protocol)과 같은 시그널링 프로토콜과 결합�
 
    - Sequence number : (16 비트)
 
-          - 패킷 손실 검출 및 순서 재구성 
-             
-          - 초기값은 랜덤이고, 매 패킷 마다 1씩 증가
-             
-          - 수신측은 패킷 재전송 요청 보다는 패킷 손실 검출 및 뒤바뀐 순서 복구를 위함
+      - 패킷 손실 검출 및 순서 재구성 
       
+      - 초기값은 랜덤이고, 매 패킷 마다 1씩 증가
+        
+      - 수신측은 패킷 재전송 요청 보다는 패킷 손실 검출 및 뒤바뀐 순서 복구를 위함
       
-
-​       
-​      
-        - Timestamp : (32 비트)
-                - RTP 스트림 내 각 RTP 패킷이 샘플링된 시간관계를 나타냄
-                   랜덤한 초기값부터 시작하며, 통상적으로 카운터에 의해 1씩 증가시킴
-                   
-                - 타임스탬프 간격은 Payload Type에 따라 정해진 샘플링 간격을 기준 
-                   . 대부분의 오디오 RTP 패킷의 경우 => 1 패킷 당 디폴트 시간 간격을 20 ms으로 함
-                      예시) G.711 (PCM A-Law) 오디오 페이로드 패킷 크기 
-                               = (유료부하 코덱 데이터율) x (1 패킷 당 시간 간격)
-                               = (64 kbps G.711 코덱) x (20 ms)
-                               = (8000 samples x 8 bits)/sec x (0.02 sec)
-                               = 160 바이트
-                   
-            - 타임스탬프 값의 연속성 의미 구분
-               . 예1) 일련의 패킷들의 타임스탬프 값이 같은 경우 : 특정 비디오 장면이 같은 시간에 샘플링되었음을 의미
-               . 예2) 일련의 패킷들의 타임스탬프 값이 단순 증가하지 않는 경우 : MPEG 화면 픽처 처럼 시간 순서가 어긋나며 전후 화면으로부터 예측되었음을 의미
-               . 예3) 일련의 패킷들의 타임스탬프 값이 연속 증가되는 번호 순서를 갖음 : 오디오 패킷 흐름일 경우 등
-
-
-​               
-​      
-    - 동기 발신 식별자 (SSRC ID, Synchronization SouRCe ID) : (32 비트)
+         
       
-        - 원래의 정보 스트림에 대한 식별 (즉, RTP 세션에서 소스 구분하는 고유 번호)
-           하나의 RTP 세션 내에서는, 
-           		각각의 발송지는 무작위로 선택된 SSRC ID로 나타내고, 
-           		다만, 타 발송지와의 구별을 위해 중복 불허하며, 
-           		결국, 하나의 웹브라우저에서 2개 동영상 가능 등
+   - Timestamp : (32 비트)
+      P 스트림 내 각 RTP 패킷이 샘플링된 시간관계를 나타냄
+      랜덤한 초기값부터 시작하며, 통상적으로 카운터에 의해 1씩 증가시킴
 
+      - 타임스탬프 간격은 Payload Type에 따라 정해진 샘플링 간격을 기준 
 
-​           
-​       
-    - 기여 발신 식별자 (CSRC ID, Contributor SouRCe ID) 목록 : (32 비트) 1 이상 가변 갯수
-      
-        - 믹서(Mixer)를 통해 혼합되어 단일의 정보열로 되면, 원래의 각각에 대한 식별 역할
-           . 여러 미디어가 혼합되면, CC(CSRC Count:4 비트)에 총 개수를 지정하고, 
-           . SSRC 외에, 추가된 스트림들에 대한 식별자를 CSRC ID 값으로 함
+      - 대부분의 오디오 RTP 패킷의 경우 => 1 패킷 당 디폴트 시간 간격을 20 ms으로 함
+                예시) G.711 (PCM A-Law) 오디오 페이로드 패킷 크기 
+                         = (유료부하 코덱 데이터율) x (1 패킷 당 시간 간격)
+                         = (64 kbps G.711 코덱) x (20 ms)
+                         = (8000 samples x 8 bits)/sec x (0.02 sec)
+                         = 160 바이트    
+
+      - 타임스탬프 값의 연속성 의미 구분
+
+         - 예1) 일련의 패킷들의 타임스탬프 값이 같은 경우 : 특정 비디오 장면이 같은 시간에 샘플링되었음을 의미
+
+         - 예2) 일련의 패킷들의 타임스탬프 값이 단순 증가하지 않는 경우 : MPEG 화면 픽처 처럼 시간 순서가 어긋나며 전후 화면으로부터 예측되었음을 의미
+
+         - 예3) 일련의 패킷들의 타임스탬프 값이 연속 증가되는 번호 순서를 갖음 : 오디오 패킷 흐름일 경우 등
+
+            
+
+   - 동기 발신 식별자 (SSRC ID, Synchronization SouRCe ID) : (32 비트)
+
+      - 원래의 정보 스트림에 대한 식별 (즉, RTP 세션에서 소스 구분하는 고유 번호)
+             하나의 RTP 세션 내에서는, 
+             		각각의 발송지는 무작위로 선택된 SSRC ID로 나타내고, 
+             		다만, 타 발송지와의 구별을 위해 중복 불허하며, 
+             		결국, 하나의 웹브라우저에서 2개 동영상 가능 등
+
+   - 기여 발신 식별자 (CSRC ID, Contributor SouRCe ID) 목록 : (32 비트) 1 이상 가변 갯수
+
+      - 믹서(Mixer)를 통해 혼합되어 단일의 정보열로 되면, 원래의 각각에 대한 식별 역할
+                . 여러 미디어가 혼합되면, CC(CSRC Count:4 비트)에 총 개수를 지정하고, 
+                . SSRC 외에, 추가된 스트림들에 대한 식별자를 CSRC ID 값으로 함
+
+ 
 
 
 
@@ -889,7 +992,7 @@ Polling 이 아니라 event 방식을 이용하는 것도 Observe option 필드�
 
 ![CoAP Observation](README%20assets/coap-observation.png)
 
-## 마치며
+### 마치며
 
 이 외에도 큰 사이즈 데이타 전송을 위한 black transfer도 지원하고, multicast address를 이용한 여러 소스에서 응답 받기, service/resource discovery 도 지원하여 별도의 설정없이 자동으로 시스템 구성도 할 수 있다.
 
@@ -900,3 +1003,57 @@ Zigbee 보다는 좀더 오픈 마인드로 [Thread](http://threadgroup.org/) �
 - 보안: 순순한 IP 망이면 end-to-end 암호화도 가능하므로 중간의 proxy를 신뢰도가 낮아도 됨. Gateway 방식은 IP 네트워크와 센서 네트워크간의 데이타 변환을 위하여 복호화 수행하므로 보안 레벨이 높아야 함.
 - 확장성: Proxy는 stateless로도 운영 가능하며 변경없이 새로운 서비스 적용 가능
 - 투명성: 순수 IPv6 네트워크
+
+
+
+
+
+# Proxy
+
+### Proxy란?
+
+클라이언트에서 어떤 인터넷 주소의 정보를 요청 했을때 그 주소에 해당하는 정보를 사전에 저장해둔 서버에서 찾아보고 있으면 바로 응답을 해주고, 없으면 해당 주소의 웹서버에 접속해서 요청 정보를 가져와 저장 후 응답해 주는 역할을 말한다.
+
+
+
+## Forward Proxy란?
+
+![image-20201223160103366](README%20assets/image-20201223160103366.png)
+
+클라이언트가 웹 서버에 접근하려고 할때 클라이언트의 요청이 웹서버에게 직접 전송되는 것이 아니고 중간에 Proxy 서버에게 전달되어 Proxy 서버는 그 요청을 웹 서버에게 전달하여 응답을 받아오는 방식이다.
+
+**추천 용도**
+
+- Content Filtering
+- eMail security
+- NAT'ing
+- Compliance Reporting
+
+
+
+## Reverse Proxy란?
+
+![image-20201223160326606](README%20assets/image-20201223160326606.png)
+
+클라이언트는 웹 서버의 주소가 아닌 Reverse Proxy로 설정된 주소로 요청을 하게 되고, Proxy 서버가 받아서 그 뒷단에 있는 웹 서버에게 다시 요청을 하는 방식으로 클라이언트는 진짜 웹 서버의 정보를 알 수가 없다.
+
+**추천 용도**
+
+- Application Delivery including
+- Load Balancing(TCP Multiplexing)
+- SSL Offload/Acceleration (SSL Multiplexing)
+- Caching
+- Compression
+- Content Switching/Redirection
+- Application Firewall
+- Server Obfuscation
+- Authentication
+- Single SIgn On
+
+
+
+## MANET
+
+### 무선매체
+
+![image-20201223175423557](README%20assets/image-20201223175423557.png)
