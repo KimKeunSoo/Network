@@ -1,3 +1,153 @@
+# NAT
+
+NAT Traversal 은 IPv4가 사라지고 IPv6가 오면 사라지는 기술이라고 이야기를 많이 했었는 데 NAT는 단순한 주소 부족 이유 보다는 보안상의 이유로 더 많이 사용하기 때문에 NAT Traversal 이슈는 여전히 남아 있을 수 있다.
+
+
+
+### NAT의 문제점
+
+SIP와 같은 Offer/ Answer 프로토콜은 NAT환경에서 운영하기 어렵다. SIP 프로토콜의 목적은 미디어 패킷을 송수신하기 위한 플로우를 설립하는 것이 목적으로 IP 주소와 포트 넘버를 Application Layer에서 직접 전달한다. 하지만 라우터나 방화벽같은 장비들은 L3나 L4 레벨의 패킷 헤더만을 인식하므로, SIP와 같은 어플리케이션 헤더에 있는 IP 주소와 포트에 관심이 없다. NAT (Network Address Translation)을 수행하는 대부분의 장비들이 바로 L3 및 L4에 위치한다. 아래 그림은 SIP 어플리케이션의 호 설립을 위한 INVITE 메세지의 헤더를 표시한 것이다. 
+
+![img](README%20assets/27127749529D9D7927)
+
+ SIP 헤더에는 다수의 IP 주소와 포트가 표시되어 있으며, 특히 SDP는 미디어의 속성과 코덱정보 그리고 미디어가 직접 송수신될 주소를 명기하므로 실시간 음성이나 영상 통화에 문제를 일으키는 것이다. 문제는 호 설정 실패에서 단방향 묵음 또는 양방향 묵음 등의 다양한 현상을 일으키게 된다. 아래에는 SIP헤더에 사설 IP 주소가 명기되면 어떤 문제를 일으키는 지 간단히 살펴본다. 
+
+- **사설 IP가 적용된 Via헤더** 
+  INVITE 메세지에 대한 200 OK 메세지는 Via 헤더의 주소로 응답한다. Via 헤더는 SIP Proxy서버에 의해 삽입되므로 Via 헤더에 명기된 주소로 보내지는 200 OK는 SIP Proxy서버에 도달하지 못하므로 호 설정이 되지 않는다. 
+
+  
+
+- **사설 IP가 적용된 Contact헤더**
+  Contact 헤더는 새로운 요청이 발생할 때 사용하는 헤더이다. 수신자가 직접 전화를 끝을 경우에 BYE 메세지를 전송할 때 바로 Contact 헤더를 이용하지만, 송신자는 전화가 통화중에 상대방이 전화를 끊었는 지를 알지 못합니다. 이 BYE 메세지도 SIP Proxy 서버를 경유하게 하기 위해서는 Route 나 Record-route 헤더를 삽입하면 되지만, NAT환경에서는 마찬가지로 문제이다.   
+
+
+
+지금은 어플리케이션 레벨에서 직접적인 IP 주소 사용을 제한하지만, SIP는 이미 오래전에 만들어진 프로토콜이므로 어쩔 수 없이 IP 주소와 포트를 직접 명기한다. 따라서, NAT 문제를 해결하기 위한 다양한 방식이 함께 발전해 왔다. 
+
+- ALG (Application Layer Gateway) 
+- Middlebox Control Protocol (RFC 3303)
+- Original Simple Traversal of UDP Through NAT (STUN, RFC 3489, updated by RFC 5389) 
+- Session Traversal Utilities for NAT ( STUN, RFC 5389) 
+- Realm Specific IP (RFC 3102, RFC 3103)
+- SDP Extensions (RFC 4566)
+- SBC (Session Border Controller)
+
+
+
+아쉽게도 위의 기술들은 모두 장단점을 가지고 있어서 모든 네트워크에 접합하지 않아 네트워크의 복잡도를 증가시킨다. 요즘 주목받는 ICE는 모든 네트워크 상황에 적용 가능한 단일 솔루션으로 각광받고 있다. 
+
+
+
+**ICE 란 무엇인가? (RFC 5245 Introduction 부분)**
+
+ICE (Interactive Connectivity Establishment)는 RFC  5245 : A protocol for Network Address Translator (NAT) Traversal for Off/Answer Protocols로 제안된 권고안으로 두 대의 단말이 서로 상대방과 통신하기 위한 최적의 경로를 찾을 수 있도록 도와주는 프레임워크이다. ICE는 STUN (Session Traversal Utilities for NAT, RFC 5389)와 TURN (Traversal Using Relay NAT, RFC 5766) 을 활용하여 Offer / Answer Model의 프로토콜에 적용할 수 있다. SIP는 Offer / Answer Model의 프로토콜이다. 
+
+RFC 5245 ICE는 Offer / Answer 모델에 의해 생성되는 UDP 기반 미디어 스트림을 위한 NAT Traversal 기술이지만, TCP와 같은 전송 프로토콜에도 적용할 수 있다. ICE는 SDP Offer 안에 다수의 IP주소와 포트를 포함하도록 하여 양 단말이 직접 단대단 (Peer-to-peer) 연결성 (Connectivity) 확인한 후에 미디어를 전송하도록 한다. 만일 커넥티비티 체크 (Connectivity Check)를 통해 직접 연결할 수 없다면, TURN을 이용한다 . 
+
+
+
+**STUN (Session Traversal Utilities for NAT)**
+
+![img](README%20assets/2735604E529EBC4E28)
+
+STUN은 클라인언트-서버 프로토콜로 STUN Server와 STUN Client 간의 통신을 다룬다. STUN Client는 NAT 장비 뒤에 위치하며, STUN Server는 공인 IP 망에 위치한다. 기본적인 통신은 STUN Client가 요청을 하고, STUN Server가 응답하는 형식이다.  
+
+STUN 클라이언트는 자신의 실제 공인 IP 주소를 알수 없으므로 STUN 서버에게 "나의 공인 IP 주소는 무엇인가?""라고 요청하면, STUN Server는 Layer 3/4 IP 주소와 포트 넘버를 STUN 패킷의 페이로드 내의 IP주소와 포트넘버와 비교한 후에 자신의 데이타 베이스에 두 주소를 바인딩한다. STUN 서버는 "너의 공인  IP 주소는 이거다"라고 바인딩한 정보를 STUN Client에게 응답한다. 
+
+
+
+STUN Client는 Reflexive Transport Address 또는 Mapped Address를 STUN Server를 통해 확인한후 SIP 헤더의 주소를 STUN Client가 직접 공인 IP 주소로 바꾸어 보내 줍니다. 
+
+따라서, 통신하려는 두 종단이 모두 NAT 환경에 있다면 STUN은 동작하지 않는다. 
+
+또한, NAT 장비가 Symmetric NAT를 수행할 경우도 마찬가지이다. 
+
+Symmetric NAT는 Client가 서로 다른 목적지로 패킷을 전송할 경우에 NAT 매핑 테이블이 매번 바뀌기 때문이다. NAT의 종류 및 동작 방식에 대해서는 생략한다.
+
+
+
+**TURN (Traversal Using Relays around NAT, RFC 5766)** 
+
+TURN 프로토콜은 NAT 상황에 놓인 호스트가 릴레이 서버를 활용하여 상호 통신하도록 하며, ICE의 일부로 사용될 수 있도록 디자인 되었다.  아래 그림은 RFC 5766에서 TURN을 설명하는 그림이다. 
+
+![img](README%20assets/23182546529EBA230D)
+
+TURN 클라이언트는 NAT 장비 뒷단에 위치하며,  TURN 서버는 인터넷망에 위치한다. TURN 클라이언트가 통신하고자 하는 대상은 Peer이며, Peer A은 NAT 환경에 , Peer B는 공인환경에 있다. TURN 클라이언트는 패킷을 Peer A와 Peer B로 전송하기 위해 직접 통신을 하지 않고 TURN Server를 경유하여 보낸다. 
+
+TURN 클라이언트가 TURN 메세지를 TURN 서버로 자신의 Host Transport address (사설망 내의 IP주소와 포트)를 포함하여 전송한다. TURN 서버의 주소는 수동 설정이나 기타 다양한 방식으로 취득한다고 가정한다. TURN 서버는 TURN 메세지 내의 Host Transport address와 L3 / L4의 Server-reflexive transport address를 차이를 확인하고, 응답을 TURN 클라이언트의 L3 / L4 server-reflexive transport address로 전송한다. NAT 장비는 당연히 자신의 NAT 매핑 테이블에 있는 정보에 따라 TURN 응답 메세지를 클라이언트의 Host Transport address로 전송할 것이다. TURN 서버는 Relay 서버의 Relay Transport address를 할당(allocation)하는 것이 역할이며, 일반적으로 Relay Transport address는 TURN 서버의 주소이다.
+
+
+
+**ICE의 이해 - ICE Candidate Gathering**
+
+ICE를 실행하기 위해서 클라이언트는 모든 통신 가능한 주소를 식별해야 한다. 아래 그림에서 보듯이 처음에 클라이언트는 STUN 메세지를 TURN 서버로 요청 및 응답하는 과정에서 다음의 주소를 확인할 수 있다.
+
+
+
+- Relayed Address : TURN서버가 패킷 릴레이를 위해 할당(allocation)하는 주소 (Relayed Candidate)
+- Server Reflexive Address : NAT 장비가 매핑한 클라이언트의 공인망 주소 (Server Reflexive Candidate)
+- Local Address : 클라이언트의 사설 주소 (Host Candidate), 랜과 무선랜 등의 다수의 인터페이스가 있을 경우에 모든 주소가 후보가 된다. 
+
+
+
+Candidate는 IP 주소와 포트의 조합으로 표시된 주소이며, 아래 그림에서 대문자는 IP 주소를, 소문자는 포트를 의미한다. TURN 서버는 Relayed Candidate 와 Server Reflexive Candidate 값을 응답하지만, STUN 서버는 Server Reflexive Candidate 값만을 응답할 것이다.
+
+![img](README%20assets/234CAE42529ECFA012)
+
+
+
+ 예를 들어, 클라이언트 또는 에이전트가 NAT 장비 뒤에 있다면, 3개의 주소는 모두 다른 주소가 되겠지만, 공인망에 있다면, Server Relexive Address와 Local Address는 동일할 것이다.
+
+ 
+
+![img](README%20assets/23747F42529EDB210D)
+
+
+
+확보된 Candidate를 이용하여 다양한 연결이 가능하겠지만, 기본적으로는 위의 그림과 같이 3개의 연결이 가능하다. 
+
+- Direct Connection : Host Candidate 간의 직접 미디어를 송수신 
+- Server Reflexive Connection : Server Reflexive Candidate를 이용한 미디어 송수신
+- TURN Relay Connection : Relay Candidate를 이용한 미디어 송수신
+
+기본적이라는 의미는 Local 주소끼리만 통신하는 것이 아니라, Local Address 와 Server Reflexive Address와도 Connection을 맺을 수 있다는 것이다.
+
+
+
+**ICE의 이해 - Connectivity Checks**
+
+이제 송신 클라이언트는 확보된 3개의 주소를 이용하여 우선순위를 정한 후 시그널링 채널을 이용하여 수신 클라이언트에게 Candidate를 SDP내에 포함시켜 전송한다. 수신 클라이언트도 마찬가지로 Candidate Gathering을 통해 3개의 Candidate 주소를 확보한 후에 SDP로 송신 클라이언트에게 전송한다.  아래 그림과 같이 INVITE with SDP와 200 OK with SDP로 Offer / Answer 로 교환될 때 Candidate가 교환되는 것이다.
+
+![img](README%20assets/2317BA34529EE01124)
+
+
+
+실제 SDP 메세지는 아래는 아래와 같다. 우리가 알고 있는 m=과 c=에 기본적인 주소가 있지만,  a=candidate 에 관련된 Candidate 주소가 명시된다. 이 주소는 RTP 및 RTCP를 위한 주소이다. 
+
+![img](README%20assets/27600734529EE0130A)
+
+이제 송신 클라이언트와 수신 클라이언트는 이용한 가능한 Candidate를 확인하기 우해 STUN 요청과 응답 매커니즘인 4-way Handshake로  Connectivity Checks를 진행한다. Connectivity Checks 는 두 단말간에 직접 STUN 요청과 응답을 이용하므로 만일 기존의 Server Reflexive Address와 틀릴 경우에는 새롭게 업데이트하고 이를 Peer Reflexive Candidate라고 한다. 이 과정은 실제 미디어가 흘러갈 수 있는 지를 확인하는 것이므로 사용할 RTP 및 RTCP 포트에 대해 진행한다.아래 그림은 실제 Connectivity Checks를 위해 모든 주소에 대해 확인하는 것을 표시한 것이다.
+
+![img](README%20assets/2748EF43529EDBDA20)
+
+
+
+3 개의 주소에 대해 각각 연결을 확인하다가 아래 그림처럼 연결이 확인이 되면 실제 RTP 및 RTCP 패킷을 전송하여 통화가 가능하게 된다.
+
+![img](README%20assets/2477D94C529EDCD60C)
+
+
+
+
+
+**맺음**
+
+ICE는 표준화가 완료되었으며, 마이크로소프트와 시스코과 같은 제조사에서 적극적으로 도입하고 있다. ICE를 구현하기 위해서는 TURN 서버 역활을 할 제품과 음성 및 영상 단말에 ICE 클라이언트 기능이 적용되어야 한다. 시스코의 경우는 VCS와 Cisco Expressway에 TURN 서버 기능을 도입하였으며, 영상 단말은 이미 ICE가 적용되었다.
+
+
+
+
+
 # SDN
 
 Control Plane과 Data Plane이 물리적으로 분리된 아키택쳐이다.
@@ -612,11 +762,13 @@ SIP(Session Initiation Protocol)과 같은 시그널링 프로토콜과 결합�
 ![img](README%20assets/1381_1.JPG)
 
 1. IP/UDP에 실린 RTP 구조
-   ![img](README%20assets/3394_1.JPG)
-
+   
+![img](README%20assets/3394_1.JPG)
    
 
+   
 2. RTP 패킷 구조
+
    ![img](README%20assets/3394_2.JPG)
 
    
@@ -758,7 +910,7 @@ SIP(Session Initiation Protocol)과 같은 시그널링 프로토콜과 결합�
 
  가. 6LoWPAN의 구성도
 
- ![img](README%20assets/20160908135957818.png)
+![img](README%20assets/20160908135957818.png)
 
 -  외부 IP네트워크와 6LoWPAN 각각에 대해 16비트 주소를 Mapping하여 IPv6패킷을 압축
 -  IEEE 802.15.4 MAC과PHY위에 적응계층(Adaptation Layer)으로서 단편화, 커미셔닝, ND(Neighbor Discovery) 최적화, 메쉬라우팅, IPv6, TCP/UDP, 소켓API, SNMP, 서비스 네이밍, 센서응용 등으로 구성
