@@ -1,3 +1,1105 @@
+## Internet Protocol Suite
+
+인터넷에서 컴퓨터들이 서로 정보를 주고 받는데 쓰이는 프로토콜의 모음. 그 중 TCP와 IP가 가장 많이 쓰이기 때문에 TCP/IP Protocol Suite라고도 한다.
+
+​    
+
+## Internet Protocol Stack
+
+| 응용 계층       | DNS, TLS/SSL FTP, HTTP, SMTP, MQTT. .          |
+| --------------- | ---------------------------------------------- |
+| **전송 계층**   | **TCP, UDP, QUIC, DCCP, RSVP. .**              |
+| **인터넷 계층** | **IPv4, IPv6, ICMP, IGMP, IPsec, ECN . .**     |
+| **링크 계층**   | **ARP, NDP, OSPF, 터널(L2TP), MAC, 이더넷. .** |
+
+링크 계층은 물리 계층, 데이터 계층으로 나눌수 있음
+
+   
+
+
+
+## 6LoWPAN – 사물 인터넷을 위한 IPv6
+
+IPv6의 한 패킷 크기는 1,280바이트이며 헤더의 크기가 최소한 40바이트이다. 기존의 인터넷의 주요 링크 프로토콜인 이더넷과 달리 사물인터넷의 주요 링크 프로토콜인 802.15.4 프레임의 크기는 127바이트이기 때문에 기존의 IPv6 프로토콜을 수용하기 위해서는 주소 압축 등이 필요하다.
+
+이를 수용하는 것이 6LoWPAN이다. 현재 지그비, 스레드, 콘티키, mbed OS 등의 대부분 사물인터넷 관련 아키텍처나 오픈소스 플랫폼에서 수용하고 있다.
+
+​    
+
+## LPWAN - 저전력 광역통신망
+
+현재 사용되는 대부분의 무선 광역통신망은 스마트 폰 등으로  음성, 영상, 데이터를 주고받기 위한 이동통신 네트워크이다. (예, 3G 4G망 등) 그러나 저전력 광역통신망은 사물인터넷 디바이스들을 위한 초전력성 이동통신망이라 할 수 있다.
+
+​    
+
+스마트 홈, 스마트 빌딩 등에 사용하는 BLE, 지그비 등 짧은 거리를 위한 근거리 무선 통신 기술을 적용할 경우 사물인터넷 서비스 제공자는 스마트 홈 게이트웨이같은 복잡한 과정을 거쳐야 사물인터넷 디바이스에 접근할 수 있으나, LPWAN을 통할 경우에는 사용자 영역의 번거로운 과정을 거치지 않고 직접 연결할 수가 있다. 주로 많은 수의 디바이스들이 필요한 옥외 응용 분야에서 더 유용하게 이용할 수 있다. 5~40km 장거리 범위 지원
+
+​    
+
+단점 : 전송 속도 몇백 bps 이하, 전송 지연 多
+
+​    
+
+## 다이렉트(Direct) 통신 기술
+
+디바이스와 디바이스를 1:1로 연결해 주는 통신 기술
+
+<-> 허브를 통한 연결 = Hub and Spoke 방식
+
+== 특별한 목적을 위해 직접 연결 = ad hoc 방식
+
+​    
+
+## 블루투스(Bluetooth)
+
+IEEE 802.15.1 표준 규격을 이용하는 근거리 무선통신기술(WPAN, Wireless Personal Area Network), 무선 주파수 대역인 2.4GHz 대역 사용, 진화하여 16년 5버전은 2Mbps. . . .
+
+최대 7대 연결가능, but 실제 3대쯤
+
+​    
+
+## 와이파이 다이렉트 (Wi-Fi Direct)
+
+와이파이 지원 장치들이 공유기를 거치지 않고 직접 통신할 수 있도록 하는 기술. 주로 대용량 파일 공유, 동영상 스트리밍 전송 목적. 두 장치 중 어느 한 장치가 인터넷에 접속되어 있어야 한다. 
+
+​    
+
+## LTE 다이렉트 (LTE Direct)
+
+LTE를 지원하는 장치들이 기지국을 거치지 않고 직접 통신을 할수 있도록 하는 기술. 주로 대용량 파일 공유, 동영상 스트리밍 전송 목적. 약 1km이내의 가까운 거리에 존재해야 함. 
+
+​    
+
+## 저전력 메쉬네트워크
+
+열악한 환경에서 온도, 습도 등의 환경을 감지하는 많은 수의 센서의 정보를 비교적 가까운 거리에 전달하기 위한 통신 기술. 거리의 제약을 없애기 위해 디바이스가 다른 디바이스의 정보를 전달해 주는 기능을 가지므로 메쉬 네트워크라 한다. 지그비(Zigbee)와 지웨이브(Z-wave)가 대표적인 적용기술.
+
+  ![그림입니다.  원본 그림의 이름: CLP00003bc83f4e.bmp  원본 그림의 크기: 가로 704pixel, 세로 125pixel](README%20assets/tmp3E54.jpg)  
+
+​    
+
+## 스마트홈 게이트웨이
+
+허브 : 같은 통신 방식의 네트워크 연결
+
+게이트웨이 : 다른 통신 방식의 네트워크 연결
+
+현재의 인터넷 공유기는 무선으로 연결하기 시작했고 스마트홈 제품들은 배터리 수명이나 안전의 통신등의 이유로 와이파이가 아닌 블루투스나 지웨이브와 같은 무선통신기술만을 지원. 이제부터는 그 두 개의 역할을 합치면서 AI, 사용자 인터페이스등을 포함하게 될 것이다. 
+
+​    
+
+## 사물인터넷 응용 프로토콜
+
+인터넷의 핵심 기술은 IP, 인터넷을 성장시킨 기술은 TCP/IP위에서 웹의 세상을 연 HTTP. HTTP는 FTP, DNS, SMTP 등과 같은 인터넷 응용 프로토콜 중의 하나. 인터넷 응용 프로토콜들은 고유한 포트번호들이 있다.
+
+  ![그림입니다.  원본 그림의 이름: CLP00003bc80001.bmp  원본 그림의 크기: 가로 717pixel, 세로 447pixel](README%20assets/tmp3E65.jpg)  
+
+사물인터넷 디바이스들을 위한 프로토콜인 CoAP(Constrained Application Protocol), MQTT(Message Queueing Telemetry Transport) 
+
+## CoAP (Constrained RESTful Environment)
+
+인터넷 대부분의 기술이 다루어지는 IETF의 관점에서 볼 때
+
+IP(v4&v6)위에 HTTP가 있다면,
+
+사물인터넷을 위한 IPv6인 6LoWPAN위의 응용 프로토콜로는 CoAP이 존재함. RESTful 방식 수용.
+
+
+
+## MQTT (Message Queuing Telemetry Transport)
+
+CoAP과 유사하게 모바일 기기나 낮은 대역폭의 소형 디바이스들에 최적화된 메시징 프로토콜. 느리고 품질이 낮은 네트워크에서도 메시지를 안정적으로 전송. 저전력에 방점을 두며 가장 작은 메시지는 2byte까지 가능. Publish/Subscribe 형태를 취하여 세가지의 QoS레벨 제공.
+
+  ![그림입니다.  원본 그림의 이름: CLP00003bc80002.bmp  원본 그림의 크기: 가로 1389pixel, 세로 392pixel](README%20assets/tmp3E75.jpg)  
+
+​    
+
+​    
+
+## RFID (Radio Frequency Identification)
+
+전파를 이용해 먼 거리에서 정보를 인식하는 기술. 전자기 유도 방식으로 통신. LFID는 120~140kHz, HFID는 13.56MHz를 사용하며, UHFID(UltraHigh-Frequency IDentification)는 868 ~ 956MHz
+
+​    
+
+## SSH (Secure Shell) 
+
+네트워크 상의 다른 컴퓨터에 로그인하거나 원격 시스템에서 명령을 실행하고 다른 시스템으로 파일을 복사할 수 있도록 해주는 응용 프로그램 또는 그 프로토콜을 가리킨다. 기본적으로 22번 포트 사용. 암호화 기법이 사용되기에 통신이 노출된다하더라도 암호화된 문자로 보임. IP spoofing 방지 기능 제공, TCP/IP 패킷 포워딩 제공.
+
+​    
+
+## ICMP (Internet Control Message Protocol)
+
+인터넷 제어 메시지 프로토콜, Internet Protocol Suite에 기록된 주요 프로토콜 중 하나. OS에서 오류 메시지를 전송받는데 주로 쓰이며 Internet Protocol에 의존하여 작업 수행. 프로토콜 번호 1번 사용, 시스템 사이 데이터 교환 X. ICMP 헤더는 IPv4 헤더 뒤에서 시작되고 모든 ICMP 패킷은 8바이트 헤더와 가변 데이터 구역을 가지고 있음. 마지막 4바이트는 ICMP 패킷의 타입과 코드에 의존, 처음 4바이트는 고정된 형식을 가짐.
+
+ 
+
+## HTTP (HyperText Transfer Protocol)
+
+WWW상에서 정보를 주고받을 수 있는 프로토콜. 주로 HTML 문서를 주고 받는데에 쓰임. TCP와 UDP를 사용, 80번 포트 사용. 클라이언트-서버 요청/응답 프로토콜. 예를 들어 클라이언트인 웹 브라우저가 HTTP를 통하여 웹페이지나 그림 정보 요청, 서버는 응답하여 필요 정보를 사용자에게 전달.
+
+​    
+
+## DHCP (Dynamic Host Configuration Protocol)
+
+동적 호스트 구성 프로토콜. 호스트 IP 구성 관리를 단순화하는 IP 표준. DHCP 서버를 사용하여 IP 주소 및 관련된 정보를 DHCP 사용 클라이언트에게 동적으로 할당.  DHCP는 네트워크 관리자가 중앙에서 IP 주소를 관리하고 할당하며, 컴퓨터가 네트워크의 다른 장소에 접속되었을 때 자동으로 새로운 IP 주소를 보내줄 수 있게 해준다.
+
+​    
+
+1. DHCP Discover : 단말 -> DHCP 서버
+
+   브로드캐스트 메시지를 통해 단말장비가 DHCP 서버에게 IP 할당 요청
+
+2. DHCP Offer : DHCP 서버 -> 단말
+
+   브로드케스트 메시지이거나 유니캐스트를 통해서 이루어짐, 아이피 주소정보와 단말의 MAC 주소등을 함께 전송
+
+3. DHCP Request : 단말 -> DHCP 서버
+
+   브로드케스트 메시지로 단말이 받은 IP를 사용하겠다는 것을 서버로 보냄
+
+4. DHCP Ack : DHCP서버 -> 단말
+
+   DHCP Request 메시지 내의 Broadcast Flag = 1이면 서버는 Ack메시지를 Broadcast로, 0이면 Unicast로 보내줌, 단말의 MAC 주소에 매칭이 되는 IP주소와 게이트웨이 주소를 확정
+
+​    
+
+## IGDP (Internet Gateway Device Protocol)
+
+NAT에 포트들을 mapping해주는 프로토콜로 NAT사용 가능한 라우터들에서 지원됨. 포트 포워딩을 자동으로 해주는 통신 프로토콜. 
+
+peer-to-peer 네트워크, 멀티 플레이어 게임, 원격 지원 프로그램을 사용하는 application은 가정/비즈니스 게이트웨이를 통해 통신할 수 있는 방법 필요. 이때 IGD가 없으면 오류가 발생하기 쉽고 시간이 많이 걸리는 트래픽 문제가 생긴다. 이것을 위해 Universal Plug and Play (UPnP)가 NAT traversal의 문제를 해결하기위해 나옴.
+
+​    
+
+**IGDP를 사용하면 수행할수 있는 것**
+
+public(external) IP 주소 확인
+
+새로운 public IP 주소 요청
+
+기존 포트 매핑 나열
+
+매핑에 임대 시간 할당
+
+​    
+
+## SOCKS (Socket Secure)
+
+프록시 서버를 통해 Client-Server간에 네트워크 패킷을 교환하는 인터넷 프로토콜. 인증된 사용자만 서버에 접근 가능. 임의의 IP주소에 대한 TCP연결을 프록시하고 UDP 패킷을 전달하게 함. OSI 모델 5계층인 Session 계층에서 수행됨. SOCKS 서버는 TCP 포트 1080에서 들어오는 Client 연결을 수락함.
+
+HTTP 프록시보다 낮은 수준에서 작동. 
+
+​    
+
+
+
+
+
+## NAT hole punching
+
+NAT을 사용하는 방화벽이나 라우터의 뒤의 직접적 통신을 가능케 하는 네트워킹 기술. Client는 외부 및 내부 주소와 포트등 고객의 정보들을 임시로 저장하는 무제한 타사 서버에 연결, Server는 각 Client의 정보를 다른 Client로 릴레이하고 해당 정보를 사용하여 각 Client가 직접 연결을 시도합니다. 유효한 포트 번호를 사용하는 연결의 결과로 제한 방화벽 또는 라우터는 각 쪽에서 들어오는 패킷을 수락하고 전달함. 
+
+홀 펀칭에는 네트워크 토폴로지에 대한 지식이 필요하지 않음. 모든 홀 펀칭은 ICM, User Datagram 및 TCP을 사용. 
+
+NAT 장비는 그 설정에 따라 hole punching이 가능할수도 있고 가능하지 않을수도 있음. 또한 어떤 Firewall장비의 경우 안될 수도 있음.
+
+​    
+
+## STUN (Session Traversal Utilities for NAT)
+
+STUN은 P2P 통신을 위해 실시간 음성, 영상, 메시징등과 같은 상호통신의 어플리케이션에서의 NAT 게이트웨이의 traversal하는 방법들의 표준이다. STUN 메시지는 UDP 패킷으로 전송하며 신뢰성 메커니즘을 구현하지 않는다. 안정성이 필수인 경우 TCP를 사용 가능하나 추가 네트워킹 오버헤드가 발생함. 보안성을 고려한 STUN은 TLS에 의해 전송 및 암호화 가능. 
+
+STUN 이 얻은 주소는 모든 피어가 사용할수 없음. 토폴로지 조건에 따라 작동함.
+
+​    
+
+## ICE (Interactive Connectivity Establishment)
+
+peer-to-peer 네트워킹에서 가능한 핮 직접 서로 통신 할수 있는 방법을 찾기 위해 사용되는 기술. 대화식 미디어에 가장 일반적으로 사용. 중앙 서버를 통한 통신(통신 속도가 느리고 비용이 많이 드는)을 피하려고 하지만 인터넷상의 클라이언트간 직접 통신은 NAT나 방화벽으로 인해 까다로울 수 있음.
+
+​    
+
+## Universal Plug and Play (UPnP)
+
+주로 엔터프라이즈 급 장치가 없는 가정용 네트워크를 위한 네트워크상 서로의 존재 발견 및 네트워크 서비스를 구축할수 있게 하는 네트워킹 프로토콜. UPnP는 경제성, 복잡성 및 일관성을 이유로 비즈니스 환경에 배포하기 부적합. 멀티캐스트 기반은 수 많은 장치가 있는 네트워크에서 너무 많은 리소스를 소비함.
+
+웹브라우저를 통해 UI 제공 가능, IP를 지원하는 많은 미디어에서 실행 가능. 장치 드라이비 필요 X (뒷페이지 상세)
+
+​    
+
+## NAT-PMP (NAT Port Mapping Protocol)
+
+NAT 포트 매핑 프로토콜은 네트워크 프로토콜 구축을 위한 NAT설정 및 포트 포워딩을 자동으로 구성함. NAT 게이트웨이 의 외부 IPv4주소를 자동으로 결정, NAT라우터에 구현된 일반적인 IGDP에 대한 대안으로 Apple이 05년에 도입되었음. UDP를 통해 실행, 포트번호 5351 사용. STUN에 비해 NAT-PMP의 장점은 STUN서버가 필요하지 않으며, NAT-PMP 매핑에는 연결의 만료시간이 있어 불필요한 keep-alive packets을 안보내도 됨. 후에 PCP로 후속 제품이 나옴.
+
+​    
+
+## 포트 포워딩 (port forwarding) == 포트 매핑 (port mapping)
+
+패킷이 라우터나 방화벽 같은 게이트웨이를 가로지르는 동안 하나의 IP 주소와 포트 번호 결합의 통신 요청을 다른곳으로 넘겨주는 NAT의 응용이다. 이 기법은 외부망의 반대쪽인 보호/내부망의 호스트에 대한 서비스에 사용하며, 통신하는 목적지 IP 주소와 포트 번호를 내부 호스트에 다시 매핑함으로써 이루어짐.
+
+​    
+
+## IPconfig
+
+192.168.10.4
+
+네트워크 주소 : 192.168.10.0
+
+호스트 주소 : 0.0.0.4
+
+## IPv4 3 Classes
+
+0.0.0.0 : 브로드케스트
+
+**A Class** : 1.0.0.0 ~ 126.255.255.255    50%	//Netid:Hostid 1:4byte
+
+127.0.0.0 : 루프백
+
+**B Class** : 128.0.0.0 ~ 191.255.255.255  25%	//Netid:Hostid 2:2byte
+
+**C Class** : 192.0.0.0 ~ 223.255.255.255 12.5%	//Netid:Hostid 3:1byte
+
+D,E 는 용도가 정해져 있어서 접하기 쉽지 않음
+
+D Class : 224-299  //Multicast address
+
+E Class : 240-255  //Reserved for future use
+
+A Class 최상위 비트 : 0
+
+B Class 최상위 비트 : 10
+
+C Class 최상위 비트 : 110
+
+D Class 최상위 비트 : 1110
+
+E Class 최상위 비트 : 1111 //check할때는 첫비트부터 0이냐 1
+
+​    
+
+## 서브넷 마스크
+
+255.255.255.248
+
+only 1 또는 0 으로 구성되어 있음. 
+
+only 1 옥텟은 네트워크주소, only 0 옥텟은 호스트 주소.
+
+앞 세 개 옥텟은 네트워크주소를 나타내므로 C Class임을 알수 있다. 맨 뒤 옥텟은 호스트주소.
+
+1의 개수는 서브넷의 개수, 0의 개수는 호스트의 수.
+
+248 = 11111000
+
+11111 = 2^5 = 32 : 서브넷의 개수
+
+000 = 2^3 = 8 : 호스트의 개수 
+
+## 기본 게이트웨이
+
+IPv4 주소 : 192.168.10.4
+
+서브넷마스크 : 255.255.255.248
+
+​    
+
+연결가능한 호스트수가 8개, 0~255 까지의 영역을 8개씩 분할하면 32개의 서브넷이 나옴. 
+
+  ![그림입니다.  원본 그림의 이름: CLP000022a841fa.bmp  원본 그림의 크기: 가로 894pixel, 세로 412pixel](README%20assets/tmp3E86.jpg)  
+
+​    
+
+IP 호스트 주소는 4이며, 표에 따라 subnet 1에 속하고, 내 기본 게이트웨이 값은 0이 된다. subnet마다 가장 앞에 있는 주소가 기본 게이트웨이가 된다.
+
+
+
+## NAT type의 종류
+
+### Cone NAT
+
+ 내부망의 IP:Port에 대해 목적지에 관계없이 외부 IP:Port가 변하지 않는다
+
+.  ![그림입니다.  원본 그림의 이름: mem00004df03755.tmp  원본 그림의 크기: 가로 668pixel, 세로 421pixel](README%20assets/tmp3E97.jpg)  
+
+### Full Cone
+
+ Endpoint-Independent Mapping(EIM)방식
+ Endpoint-Independent Filtering(EIF)방식
+
+ Mapping Behavior : 패킷의 Source IP, Source Port만 동일하다면 Destination IP, Destination Port에 상관없이 같은 Port Mapping(Translated Port = 100)값을 사용
+   ![그림입니다.  원본 그림의 이름: CLP00004df0376c.bmp  원본 그림의 크기: 가로 509pixel, 세로 284pixel](README%20assets/tmp3ED6.jpg)  
+
+
+ Filtering Behavior : 패킷에 대해 Destination IP, Destination Port만 검사하여 패킷의 허용 여부를 판단하고, External Endpoint의 소스 정보 즉, Source IP와 Sorce Port값은 상관하지 않음.
+   ![그림입니다.  원본 그림의 이름: CLP00004df00001.bmp  원본 그림의 크기: 가로 512pixel, 세로 286pixel](README%20assets/tmp3ED7.jpg)  
+
+ 
+
+### Restricted Cone
+
+ Endpoint-Independent Mapping(EIM)방식
+ Address-Dependent Filtering(ADF)방식
+
+ Mapping Behavior : Full Cone과 동일
+
+ Filtering Behavior : 패킷에 대해 Destination IP, Destination Port, 그리고 Souce IP를 검사하여 패킷의 허용 여부를 판단하고, External Endpoint의 Sorce Port값은 상관하지 않음.
+   ![그림입니다.  원본 그림의 이름: CLP00004df00003.bmp  원본 그림의 크기: 가로 511pixel, 세로 285pixel](README%20assets/tmp3EE8.jpg)  
+
+
+### Port Restricted Cone
+
+ Endpoint-Independent Mapping(EIM)방식
+ Address and Port-Dependent Filtering(APDF)방식
+
+ Mapping Behavior : Full Cone과 동일
+
+ Filtering Behavior : Inbound 패킷에 대해 Destination IP, Destination Port 그리고 Source IP, Source Port를 검사하여 패킷의 허용 여부를 판단함
+   ![그림입니다.  원본 그림의 이름: CLP00004df00004.bmp  원본 그림의 크기: 가로 512pixel, 세로 286pixel](README%20assets/tmp3EF8.jpg)  
+
+​    
+
+### Symmetric NAT (Dynamic NAT)
+
+ 목적지에 따라 다른 공유기의 외부 IP:Port를 가진다.
+
+  ![그림입니다.  원본 그림의 이름: mem00004df00001.tmp  원본 그림의 크기: 가로 692pixel, 세로 421pixel](README%20assets/tmp3EF9.jpg)  
+
+Address and Port-Dependent Mapping(APDM)방식
+
+Address and Port-Dependent Filtering(APDF)방식
+
+​    
+
+Mapping Behavior : Outbound 패킷의 Source IP, Source Port 그리고 Destination IP, Destination Port가 모두 동일해야 같은 Port Mapping 값을 사용
+
+  ![그림입니다.  원본 그림의 이름: CLP00004df00006.bmp  원본 그림의 크기: 가로 509pixel, 세로 286pixel](README%20assets/tmp3F39.jpg)  
+
+​    
+
+Filtering Behavior : Port Restricted Con과 동일
+ Inbound 패킷에 대해 Destination IP, Destination Port 그리고 Source IP, Source Port를 검사하여 패킷의 허용 여부를 판단함
+
+  ![그림입니다.  원본 그림의 이름: CLP00004df00005.bmp  원본 그림의 크기: 가로 512pixel, 세로 286pixel](README%20assets/tmp3F3A.jpg)  
+
+​    
+
+​     
+
+## IP Address Pooling
+
+### 1. Paired
+
+ 유무선 공유기나 Wi-Fi Hotspot AP의 경우 하나의 Public IP 주소를 이용하여 NAPT (Network Address Port Translation)를 수행합니다.
+
+​    
+
+하나의 Internal Endpoint가 보내는 패킷(동일 Source IP Address)에 대해서는 Session(tuple of {Source IP, Source Port, Destination IP, Destination Port})이 달라도 동일 External IP 주소를 사용합니다.
+
+아래 그림과 같이 Internal Endpoint 10.1.1.1(Host A)이 External Endpoint 1.1.1.1(Host B)로 2개의 서로 다른 Session을 생성하였지만 NAT는 각 Session에 대해 동일 External IP 주소(5.5.5.1)를 할당합니다.
+
+​    
+
+  ![그림입니다.  원본 그림의 이름: CLP00004df00008.bmp  원본 그림의 크기: 가로 604pixel, 세로 250pixel](README%20assets/tmp3FC9.jpg)  
+
+​    
+
+### 2. Arbitrary
+
+ 3G/LTE 망에 적용된 LSN (Large Scale NAT, 혹은 CGN : Carrier Glade NAT라 부름)의 경우 여러개의 Public IP 주소 (Pool of IP addresses on the external side of the NAT)를 가지게 됩니다.
+
+​    
+
+하나의 Internal Endpoint가 보내는 패킷이지만(동일 Source IP Address를 가진 패킷), Session(tuple of {Source IP, Source Port, Destination IP, Destination Port})이 다르면 다른 External IP 주소를 사용합니다.
+
+아래 그림과 같이 Internal Endpoint 10.1.1.1(Host A)이 External Endpoint 1.1.1.1(Host B)로 2개의 Session을 생성하면 NAT는 각 Session에 대해 서로 다른 External IP 주소(5.5.5.1 and 5.5.5.2)를 할당합니다.
+
+​    
+
+  ![그림입니다.  원본 그림의 이름: CLP00004df00009.bmp  원본 그림의 크기: 가로 603pixel, 세로 251pixel](README%20assets/tmp3FCA.jpg)  
+
+​    
+
+Session 1: {10.1.1.1:5000 to 1.1.1.1:80} -> {5.5.5.1:1000 to 1.1.1.1:80}
+
+Session 2: {10.1.1.1:5001 to 1.1.1.1:8080} -> {5.5.5.2:1001 to 1.1.1.1:8080}
+
+​    
+
+참고 : RFC4798에 따르면 Endpoint-Independent Filtering이나 Address-Dependent Filtering 방식의 NAT에 대해서는 ICE (Interactive Connectivity Establishment, RFC 5245)를 통해 Peer-to-Peer 통신이 가능하지만, Address and Port Dependent Mapping + Address and Port-Dependent Filtering 방식의 NAT에 대해서는 Peer-to-Peer 통신이 불가능하여 모든 트래픽이 Relay 서버(TURN 서버)를 거칠 수 밖에 없다고 함.
+
+​    
+
+​    
+
+## Port Assignment (Mapping behavior)
+
+### 1. Port Preservation
+
+Internal Endpoint가 보낸 Source Port(Internal/Local Port) 값이 NAT 변환 후에도 그 값을 유지(Preservation)합니다.
+
+(External Port = Internal Port)
+
+​    
+
+  ![그림입니다.  원본 그림의 이름: CLP00004df0000a.bmp  원본 그림의 크기: 가로 602pixel, 세로 237pixel](README%20assets/tmp3FDA.jpg)  
+
+​    
+
+### 2. No Port Preservation
+
+Internal Endpoint가 보낸 Source Port(Internal Port) 값을 유지하지 않고 따라서 NAT 장비가 임의의 Source Port(External Port) 값으로 변경합니다.
+
+(External Port != Internal Port)
+
+​    
+
+  ![그림입니다.  원본 그림의 이름: CLP00004df0000b.bmp  원본 그림의 크기: 가로 600pixel, 세로 238pixel](README%20assets/tmp3FEB.jpg)  
+
+​    
+
+### 3. Port Overloading (in Port Preservation)
+
+Port Preservation을 지원하는 NAT 장비가 더 이상 사용 가능한 External IP Address(Public IP Address)가 없는 상황에서 동일 Source Port를 가진 Outbound 패킷이 들어올 경우를 대비한 경우.
+
+​    
+
+Port Overloading은 아주 무식한 방식, Port Collision이 발생하면 기존 Binding Entry를 새것으로 덮어 써 버림. 즉, Port Preservation 룰을 계속 유지하겠다는 건데, 이렇게 되면 아래 그림과 같이 Host B를 위해 생성된 Binding Entry가 Host A에 의해 덮어 써 지게 됩니다.
+
+​    
+
+Host A와 Host B가 NAT를 통해 Host C로 송신한 패킷이 동일한 External Address(5.5.5.5) 및 External Port(5000)를 가지게 되고, Host C가 송신하는 Inbound 패킷에 대해 NAT는 Host A로 패킷을 전달하게 되어 결국 Host B는 Host C와 통신이 불가능한 상태가 되어 버립니다. 요즘 이렇게 만든 장비는 없음.
+
+  ![그림입니다.  원본 그림의 이름: CLP00004df0000c.bmp  원본 그림의 크기: 가로 604pixel, 세로 395pixel](README%20assets/tmp3FEC.jpg)  
+
+### 4. No Port Overloading (in Port Preservation)
+
+Port Collision 발생 시 더 이상 Port Preservation 룰을 유지 하지 않고, Internal Port와 다른 값의 External Port를 할당합니다.
+
+​    
+
+  ![그림입니다.  원본 그림의 이름: CLP00004df0000d.bmp  원본 그림의 크기: 가로 602pixel, 세로 390pixel](README%20assets/tmp3FFC.jpg)  
+
+​    
+
+## Hairpinning Behavior (Filtering Behavior)
+
+동일 NAT에 속한 2대의 Internal Endpoint가 NAT를 통해 서로 통신을 하는 기능을 Hairpinning이라 함. 3G/LTE 망에 적용된 LSN(Large Scale NAT, 혹은 CGN(Carrier Grade NAT)라고도 함)을 통해 2대의 무선 단말이 통신(Skeyp, 카톡 보이스 등)을 하는 경우가 대표적인 예입니다. 2가지 종류가 있음.
+
+​    
+
+### 1. External Source IP Address and Port
+
+Host A -> Host B로 보내는 패킷 정보(NAT 수신 정보) 
+
+Destination IP = Host B의 External Address (5.5.5.2)
+
+Destination Port = Host B의 External Port (1001)
+
+Source IP = Host A의 Internal Address (10.1.1.1)
+
+Source Port = Host A의 Internal Port (5000)
+
+​    
+
+그리고 이를 수신한 NAT는 Binding Table을 참조하여 Host B로 아래와 같이 패킷 정보를 변경하여 전송. 여기서 중요한 건 Source IP/Source Port가 External Address/Port라는 점임.
+
+​    
+
+Destination IP = Host B의 Internal Address (10.1.1.2)
+
+Destination Port = Host B의 Internal Port (5001)
+
+Source IP = Host A의 External Address (5.5.5.1)
+
+Source Port = Host A의 External Port (1000)
+
+​    
+
+이 경우는 아주 바람직한 NAT Behavior 임. Host A(sender)가 보낸 패킷의 Destination IP/Port(5.5.5.2/1001)로 응답 패킷이 수신되므로(Source IP/Port=5.5.5.2/1001) 두 단말간 통신에 아무 문제가 없음.
+
+​    
+
+(Host A의 External Address(5.5.5.1)와 Host B의 External Address(5.5.5.2)가 서로 다른 값으로 표현 되었지만 NAT의 Behavior에 따라 이 두개의 값은 같을 수도 있음.)
+
+​    
+
+  ![그림입니다.  원본 그림의 이름: CLP00004df0000e.bmp  원본 그림의 크기: 가로 742pixel, 세로 269pixel](README%20assets/tmp400D.jpg)  
+
+
+
+### 2. Internal Source IP Address and Port
+
+Host A가 Host B로 보내는 패킷(NAT가 수신하는 패킷)은 전과 동일.
+
+그리고 이를 수신한 NAT는 Binding Table을 참조하여 Host B로 아래와 같이 패킷 정보를 변경하여 전송합니다. 위와의 차이점은 Source IP/Source Port가 Internal Address/Port라는 점입니다.
+
+​    
+
+Destination IP = Host B의 Internal Address (10.1.1.2)
+
+Destination Port = Host B의 Internal Port (5001)
+
+Source IP = Host A의 Internal Address (10.1.1.1)
+
+Source Port = Host A의 Internal Port (5000)
+
+​    
+
+이 경우 Host A가 보낸 패킷의 Destination IP/Port(5.5.5.2/1001)로 응답 패킷이 수신되지 않아(Source IP/Port=10.1.1.2/5001) 커널의 TCP/IP 스택에서 본 패킷은 폐기될 것임.
+
+​    
+
+  ![그림입니다.  원본 그림의 이름: CLP00004df0000f.bmp  원본 그림의 크기: 가로 738pixel, 세로 270pixel](README%20assets/tmp401E.jpg)  
+
+​    
+
+​    
+
+## OSI 모델
+
+SSL이나 TLS를 설명할 때 잘 맞음
+
+| 응용계층            | HTTP, SMTP, FTP, 텔넷, SSH, NFS . .    |
+| ------------------- | -------------------------------------- |
+| **표현계층**        | **XDR, ASN.1, SMB, AFP . .**           |
+| **세션계층**        | **TLS, SSL, ISO 8327, RPC . .**        |
+| **전송계층**        | **TCP, UDP, RTP, SCTP, SPX . .**       |
+| **네트워크 계층**   | **IP, ICMP, IGMP, ARP, RARP, RIP**     |
+| **데이터 링크계층** | **이더넷, 토큰링, 무선랜 . .**         |
+| **물리 계층**       | **전선, 광섬유, 동축케이블, 모뎀 . .** |
+
+
+
+​    
+
+### 1. 물리 계층
+
+ 데이터 전송 속도, 클록 동기화 방법, 물리적 연결 형태등
+
+### 2. 데이터 계층 – MAC주소
+
+ Frame
+
+### 3. 네트워크 계층 – IP주소
+
+ 패킷, 호스트 구분을 위한 주소 개념 필요(전송경로)
+
+### 4. 전송 계층 – PORT번호
+
+ 프로세스 구분을 위한 주소 개념 필요, 프로세스간 통신
+
+---------------------------------------OS에서 동작
+
+### 5. 세션 계층
+
+ 세션 지원
+
+### 6. 표현 계층
+
+ 데이터의 의미와 표현 방법을 처리, 암호화/압축 기능 처리
+
+### 7. 응용 계층(Application)
+
+ 대표적 인터넷 서비스 : HTTP, FTP, Telnet, 메일
+
+--------------------------------------사용자 프로그램으로 동작
+
+​    
+
+OSI 7layer, TCP/IP 4layer
+
+  ![그림입니다.  원본 그림의 이름: mem000032984f7b.tmp  원본 그림의 크기: 가로 550pixel, 세로 360pixel](README%20assets/tmp401F.jpg)  
+
+
+
+## IP – L3
+
+**IPv4** 32비트 길이의 식별자. 0.0.0.0 ~ 255.255.255.255
+
+**IPv6** 128비트 길이의 차세대 인터넷 프로토콜 주소.
+
+비연결형 서비스를 제공. ‘헤더’ CheckSum만 제공.
+
+패킷을 분할/병합하는 기능을 수행, 상위 계층에서 패킷 분실 오류 복구해야함
+
+ ![그림입니다.  원본 그림의 이름: CLP000032985071.bmp  원본 그림의 크기: 가로 461pixel, 세로 191pixel](README%20assets/tmp404F.jpg)
+
+​    ![그림입니다.  원본 그림의 이름: mem000032980008.tmp  원본 그림의 크기: 가로 519pixel, 세로 243pixel](README%20assets/tmp405F.jpg)  
+
+ IP Datagram Header Format
+
+​    
+
+#### ▶Version (4 비트)
+
+IPv4 : 0100 IPv6 : 0110
+
+TCP/IP 제품은 IPv4를 사용한다.
+
+#### ▶IHL, Header Length (4 비트)
+
+IP 헤드의 길이를 ‘4바이트’ 단위로 나타낸다. 대부분의 IP 헤더의 길이는 20바이트이므로 필드값은 거의 항상 5이다. (5*4byte = 20byte)
+
+#### ▶Type of Service (8 비트)
+
+서비스의 우선순위를 제공. 음성 -> 영상 -> Text//IPv4에는 사용X?
+
+
+
+| 7            | 6           | 5             | 4             | 3          | 2         | 1    | 0    |
+| ------------ | ----------- | ------------- | ------------- | ---------- | --------- | ---- | ---- |
+| IP 우선 순위 | 지연 최소화 | 처리량 최대화 | 신뢰성 최대화 | 비용최소화 | 0이여야함 |      |      |
+
+
+
+#### ▶Total Length (16 비트)
+
+전체 IP 패킷(헤더+데이터)의 길이를 ‘바이트’ 단위로 나타낸다.
+
+#### ▶Identification (16 비트)
+
+분열이 발생한 경우, 조각을 재결합하기 위한 필드로 패킷을 식별하는 번호로 동일한 데이터그램에 속하면 일련번호를 공유한다.
+
+#### ▶IP Flag (3 비트)
+
+패킷이 Fragment되어 있는지 아닌지 단서 제공하는 역할
+
+첫 번째 비트는 항상 0 : 예약되어 있는 비트
+
+두 번째 비트는 D : Do not fragment
+  IP 라우터에 의해 분열되는 여부를 나타냄 
+  0 - 분열 가능, 1 - 분열 방지
+
+세 번째 비트는 M : More fragment
+
+ 원래 데이터의 분열된 조각이 더 있는지 판단
+
+ 0 – 마지막 조각, 1 – 조각이 더 있음
+
+#### ▶Fragment Offset
+
+패킷 재조립시 분할된 패킷간의 순서에 대한 정보.
+
+전체 데이터에서 분할된 패킷의 상대 위치를 8byte 단위로 나타낸다.
+
+정의된 값에 8을 곱한 값이 패킷의 삽입 위치가 된다.
+
+  ![그림입니다.  원본 그림의 이름: CLP000032980002.bmp  원본 그림의 크기: 가로 534pixel, 세로 209pixel](README%20assets/tmp407F.jpg)  
+
+#### ▶Time To Live, TTL (8 비트)
+
+패킷이 경유할 수 있는 최대 Hop 수를 나타냄. 라우터를 통과하면 –1, 0이 되면 패킷은 폐기. 이때 송신측으로 ICMP 메시지가 전달됨.
+ TTL값은 OS마다 다름(윈도우 : 128, 리눅스 : 64, 기타 OS : 255)
+
+목적지가 아무리 멀어도 보통 값이 30이면 도달할수 있다. (패킷의 무한루프 방지)
+
+#### ▶Protocol (8 비트)
+
+IP Datagram의 몸체에 저장된 상위 계층 프로토콜을 나타냄.
+ ICMP : 0x01, TCP : 0x06, UDP : 0x11
+
+#### ▶Header Checksum
+
+IP패킷의 헤더가 정상적인지 검사하는데 사용. 라우터마다 검사하기 때문에 속도가 느림. 목적지 호스트는 체크섬을 확인하여 결과가 다르다면 패킷을 버린다.
+
+#### ▶Source IP Address & Destination IP Address (각각 32 비트)
+
+#### ▶Option
+
+특별히 처리 옵션이 추가로 들어갈 수 있는 필드. IHL은 4byte 단위로 헤더를 표현하기 때문에 4byte로 나뉘어질수 있도록 Padding으로 처리
+
+​    
+
+​    
+
+​    
+
+​    
+
+## UDP - L4
+
+데이터를 데이터그램 단위로 처리하는 비연결형 프로토콜. 논리적인 경로가 없고 패킷은 각각 다른 경로로 독립적으로 전송 및 처리.
+
+​    
+
+정보를 주고 받을 때 정보를 보내거나 받는다는 신호절차를 거치지 않음
+
+UDP헤더의 CheckSum 필드를 통해 최소한의 오류만 검출
+
+신뢰성 낮음
+
+TCP보다 속도 빠름, Streaming 서비스에 자주 사용
+
+​    
+
+  ![그림입니다.  원본 그림의 이름: mem000032980005.jpg  원본 그림의 크기: 가로 960pixel, 세로 720pixel](README%20assets/tmp4090.jpg)  
+
+  
+
+​    
+
+#### ▶Source/Destination Port Number (각 16비트)
+
+Source Port는 정해져 있는 것도 있지만 대부분의 경우 처음 세그먼트를 전송하는 측에서 임의의 번호 사용(client port, 1024~ 이상 port 사용)
+
+Destination Port는 처음 세그먼트를 전송하는 측에서 사용하는 포트가 정해져 있음. (예로 들어, HTTP는 80번포트)
+
+#### ▶UDP length (16 비트)
+
+헤더와 데이터를 포함한 ‘바이트 단위’의 길이. 최소값 8 (헤더만 포함될 때)
+
+#### ▶UDP CheckSum (16 비트)
+
+선택항목, 헤더와 데이터의 에러를 확인하기 위한 필드(CheckSum값이 0이면 수신측은 CheckSum계산 안함)
+
+
+
+
+
+## TCP – L4
+
+  ![그림입니다.  원본 그림의 이름: CLP000020802f62.bmp  원본 그림의 크기: 가로 900pixel, 세로 791pixel](README%20assets/tmp40E0.jpg)  인터넷상에서 데이터를 메시지의 형태로 보내기 위해 IP와 함께 사용하는 프로토콜. 일반적으로 TCP와 IP를 함께 사용하는데 IP가 데이터의 배달을 처리한다면 TCP는 패킷을 추적.
+
+​    
+
+연결형 서비스로 가상 회선 방식 제공
+
+(발신지와 수신지를 연결하여 패킷을 전송하기 위한 논리적 경로 배정)
+
+3-way handshaking 통해 연결 설정, 4-way handshaking 통해 해제
+
+높은 신뢰성, 흐름제어(수신자의 처리량을 초과하여 전송하지 않음) 및 혼잡제어(라우터 처리량을 초과하여 전송하지 않음), 오류제어(재전송), UDP보다 속도 느림(CPU를 사용하기 때문에)
+
+​    
+
+  ![그림입니다.  원본 그림의 이름: mem000032980002.png  원본 그림의 크기: 가로 566pixel, 세로 378pixel](README%20assets/tmp40F1.jpg)  
+
+TCP Segment Header Format
+
+​    
+
+#### ▶Source/Destination Port Number (각 16비트)
+
+Source Port는 정해져 있는 것도 있지만 대부분의 경우 처음 세그먼트를 전송하는 측에서 임의의 번호 사용(client port, 1024~ 이상 port 사용)
+
+Destination Port는 처음 세그먼트를 전송하는 측에서 사용하는 포트가 정해져 있음. (예로 들어, HTTP는 80번포트)
+
+​    
+
+#### ▶Sequence Number (32비트)
+
+TCP 세그먼트의 순서번호 표시. 통신을 시작하는 양단의 장비들이 별개로 임의의 번호부터 시작 
+
+​    
+
+#### ▶Acknowledgement Number (32비트)
+
+수신하기를 기대하는 다음 바이트 번호. == 마지막 수신 성공 번호 + 1
+
+​    
+
+#### ▶HLEN (Header Length, 4비트)
+
+‘4바이트’ 단위로 표시. TCP 헤더 길이는 최소 20바이트, 총 60바이트(3way-handshake) 이하
+
+​    
+
+#### ▶6개의 Flag bits (1비트씩 총 6비트)
+
+TCP 세그먼트 전달의 회선 및 데이터 관리 제어 기능을 하는 플래그
+
+​    
+
+##### ㅇURG (Urgent)
+
+ Urgent Pointer 필드에 값이 채워져있음을 알림
+
+  . 송신측 상위 계층이 긴급 데이터라고 알려주면,
+
+  . 긴급비트 URG를 1 로 설정하고,
+
+  . 순서에 상관없이 먼저 송신됨
+
+ 긴급 데이터의 마지막 바이트 위치가 Urgent Pointer로 가리켜짐
+
+​    
+
+##### ㅇACK (Acknowledgement)
+
+확인응답 필드에 확인응답번호(Acknowledgement Number) 값이 셋팅됐음을 알림
+
+  . 1로 셋팅되면, 확인번호 유효함을 뜻함
+
+  . 0로 셋팅되면, 확인번호 미포함 (즉, 32 비트 크기의 확인응답번호    필드 무시됨)
+
+SYN 세그먼트 전송 이후(TCP 연결 시작후) 모든 세그먼트에는 항상 이 비트가 1로 셋팅됨
+
+​    
+
+##### ㅇPSH (Push)
+
+버퍼링된 데이타를 가능한한 빨리 상위 계층 응용프로그램에 즉시 전달할 것
+
+  . 수신측은 버퍼가 찰 때까지 기다리지 않고, 
+
+  . 수신 즉시 버퍼링된 데이터를 응용프로그램에 전달
+
+  . 例) telnet 세션에서 `q` 입력 만으로 세션 종료를 알릴 때 등
+
+때론, 서버측에서 더이상 전송할 데이터가 없음을 나타내기도 함
+
+​    
+
+※ 아래 3개 비트 플래그(RST,SYN,FIN)는 TCP 연결설정 및 TCP 연결종료에 주체적으로 사용됨
+
+​    
+
+##### ㅇRST (Reset) [강제 연결 초기화 용도]
+
+연결확립(ESTABLISHED)된 회선에 강제 리셋 요청 
+
+  . 강제 리셋 : RST=1      (RST 세그먼트 또는 RESET 세그먼트)
+
+  . 연결 상의 문제를 발견한 장비가 RST 플래그를 `1`로 설정한 TCP    세그먼트를 송출
+
+​     .. LISTEN,SYN_RCVD 상태일때 => RST 수신한 경우에 =>              LISTEN 상태로 들어감
+
+​     .. 그밖의 상태 일때 => RST 수신한 경우에 => 
+
+​        연결 끓고 CLOSED 상태로 들어감
+
+   \* 반 개방 또는 연결 문제 등의 상황 처리를 위한 특별한 초기화용       제어 비트
+
+​    
+
+##### ㅇSYN (Synchronize)  [연결시작,회선개설 용도]
+
+TCP 연결설정 초기화를 위한 순서번호의 동기화  ☞ TCP 연결 설정
+
+​        . 연결요청  : SYN=1, ACK=0   (SYN 세그먼트)
+
+​        . 연결허락  : SYN=1, ACK=1   (SYN+ACK 세그먼트)
+
+​        . 연결설정  : ACK=1          (ACK 세그먼트)
+
+\* 즉, 송수신 간에 순서번호의 동기화
+
+​    
+
+##### ㅇFIN (Finish)  [연결해제,회선종결 용도]
+
+송신기가 데이타 보내기를 끝마침 ☞ TCP 연결 종료
+
+​        . 종결요청 : FIN=1            (FIN 세그먼트)
+
+​        . 종결응답 : FIN=1, ACK=1    (FIN+ACK 세그먼트)
+
+​    
+
+#### ▶Window size (16비트)
+
+흐름제어를 위해 사용하는 16비트 필드, 상대편에게 자신의 버퍼 여유 용량 크기를 지속적으로 통보. 수신측에 의한 능동적 흐름제어 가능케함
+
+​    
+
+#### ▶Checksum (16비트)
+
+헤더와 데이터의 에러를 확인하기 위한 필드(IP는 Header Checksum)
+ TCP는 모든 패킷을 checksum함.
+
+​    
+
+#### ▶Urgent Pointer (16비트)
+
+TCP 세그먼트에 포함된 긴급 데이터의 마지막 바이트에 대한 일련번호.
+
+없으면 전송한 데이터의 맨 마지막 바이트를 포인터로 가르킴.
+
+​    
+
+#### ▶Option 
+
+최대 40바이트까지 옵션데이터 포함가능
+
+추가적인 옵션이 있을 경우 표시
+
+
+
+
+## NAT의 문제점
+
+전송계층의 포트번호를 변경하는 1:N NAT기법의 PAT(Port Address Translation) 기술이 나온 이후 몇가지 문제점이 제시된다.
+
+​    
+
+첫 번째 문제는 비동기 애플리케이션의 경우에 생기는 문제다. 예를 들면 비동기 애플리케이션을 작성했는데, 각자 보내고 받는 프로세스가 분리돼 있고 세션을 맺는 방향이 A에서 B, B에서 A 형태로 2개이면 PAT에서는 한 방향만 정상적인 통신이 가능하다. 내부에서 외부로 가는 세션은 정상적으로 통신이 가능하지만 외부에서 내부로 들어오는 세션은 세션 성립 자체가 불가능하기 때문이다.
+
+​    
+
+두 번째 문제는 컨트롤 프로토콜과 데이터 프로토콜을 나눠서 다른 프로세스로 동작시키는 경우다. 패킷이 PAT를 거치면서 주소를 변환하게 되는데, 이때 PAT 장비(공유기나 방화벽)는 컨트롤 프로토콜과 데이터 프로토콜이 하나의 애플리케이션이라는 것을 인지하지 못한다. 컨트롤 및 데이터 관련 프로세스가 달라서 다른 포트를 사용할 때, 방향성은 같더라도 주기적으로 패킷이 발생하지 않으면(컨트롤 프로세스만 주기적으로 패킷을 발생시키거나 그 반대 일 경우) 중간에 있는 PAT 장비에서 세션을 종료(expire)시킬 수 있다.
+
+​    
+
+세 번째 문제는 애플리케이션 프로토콜 내부에 IP 주소를 넣어서 사용하는 경우다. 클라이언트와 서버가 통신할 때 클라이언트 IP를 이용해서 무언가 동작해야 하는 상황이 발생한다면, PAT 장비가 IP 주소를 변환하고 난 후에 정상적으로 동작하지 않을 수 있다. 왜냐하면 IP 주소는 PAT에 의해 변경됐더라도 애플리케이션 헤더 안에 있는 IP 주소는 그대로이기 때문이다. 최근 P2P 관련 애플리케이션들은 대부분 이런 이슈들을 가지고 있다. 그렇기 때문에 대부분의 잘 짜여진 P2P 애플리케이션들은 NAT를 식별하고 어떻게 동작하는지의 여부까지도 인지할 수 있도록 개발되고 있다.
+
+​    
+
+해결책으로는,
+
+크게 첫 번째 방법으로는 프로토콜을 개발할 때, NAT 환경을 고려하는 것이다. 보통 NAT Traversal이라고 불리는 기능을 프로토콜을 개발할 때 추가적으로 넣는다. 한마디로 표현하면 프로토콜 자체에서 NAT 환경을 고려해 NAT 장비를 잘 통과하도록 변경하는 기능이다. SIP라던지 IPSEC이라는 프로토콜들은 이런 기능을 가지고 있다. 두 번째 방법은 중간에 있는 PAT나 방화벽 장비에서 이런 프로토콜들을 이해하고 자신이 애플리케이션 내용까지 확인해서 변경하는 방법이다. 보통 이런 기능을 ALG(Application Layer Gateway)라고 부르고 시중에 나오는 방화벽들은 이런 ALG 기능을 몇 개 수준에서 수십 개 수준까지 지원한다. 하지만 이런 기능에도 제약은 따른다.
+
+​    
+
+1. 우선 잘 알려진 프로토콜이어야 한다. 방화벽이나 PAT 장비에서 이해할 수 있을 만큼 많이 사용하고 표준화된 프로토콜이어야 한다.
+
+2. 반대로 새로 개발된 최신 프로토콜의 경우 구현이 어렵다. 그리고 사용자가 직접 개발한 프로토콜은 지원이 되지 않는다고 보면 된다.
+
+3. 방화벽과 PAT 장비 성능에 무리가 따른다. ALG 기능 구현을 위해서 애플리케이션 레이어 프로토콜을 일일이 확인하고 변경해 줘야하기 때문에 이 기능을 사용할 경우 원래 계획된 성능보다 장비 성능이 많이 떨어질 수 있다. 
+
+​    
+
+이런 제약 사항들 때문에 최근 CGN(Carrier Grade NAT : SKT, KT, LG U+ 같은 대형 사업자에서 사용하는 NAT 기술)에서는 가능하면 ALG 기능을 사용해야 한다. 이 ALG 기능을 사용하지 못한다면 PAT를 사용할 때 오래된 프로토콜이나 P2P 프로그램들을 정상적으로 사용할 수 없을 것이다. 
+
+​    
+
+​    
+
+​    
+
+## RESTful 이란?
+
+REST : **Representational State Transfer**
+
+웹의 장점을 최대한 활용할 수 있는 아키텍쳐
+
+최근의 서버 프로그램은 다양한 브라우저와 모바일 디바이스에서도 통신이 가능해야함. 
+
+​    
+
+HTTP URI(Uniform Resource Identifier)를 통해 자원(Resource)을 명시하고, HTTP Method(POST, GET, PUT, DELETE)를 통해 해당 자원에 대한 CRUD Operation을 적용하는 것을 의미한다. 즉, REST는 자원 기반의 구조(ROA, Resource Oriented Architecture) 설계의 중심에 Resource가 있고 HTTP Method를 통해 Resource를 처리하도록 설계된 아키텍쳐를 의미한다.
+
+​    
+
+CRUD Operation 에는
+
+Create : 생성(POST)
+
+Read : 조회(GET)
+
+Update : 수정(PUT)
+
+Delete : 삭제(DELETE)
+
+HEAD: header 정보 조회(HEAD)  이 있음
+
+​    
+
+## REST의 특징
+
+#### 1. Uniform Interface
+
+ Uniform Interface는 URI로 지정한 리소스에 대한 조작을 통일되고 한정적인 인터페이스로 수행하는 아키텍처 스타일
+
+#### 2. Stateless (무상태성)
+
+ 상태가 있다 없다의 의미는 사용자나 클라이언트의 context를 서버쪽에 유지하지 않는다를 의미.
+ HTTP와 동일하게 세션이나 쿠키등을 별도로 관리하지 않기 때문에 API서버는 요청만을 들어오는 메시지로만 처리, 구현이 단순.
+
+#### 3. Cacheable (캐시 처리 가능)
+
+ HTTP의 기존 웹표준을 그대로 사용.
+ HTTP가 가진 캐싱 기능 적용 가능, HTTP 프로토콜 표준에서 사용하는 Last-Modified태그나 E-Tag를 이용하면 캐시 구현 가능
+ 캐시를 사용해서 응답시간이 빨라짐.
+
+#### 4. Self-descriptiveness (자체 표현 구조)
+
+ REST API 메시지만 보고도 쉽게 이해 가능한 자체 표현 구조로 됨
+
+#### 5. Client – Server Architecture
+
+ REST Server는 API를 제공하고, 제공되 API를 이용해 비즈니스 로직 처리 및 저장을 책임짐.
+ Client는 사용자 인증, Context등을 직접 관리하고 책임짐.
+ 서로간의 의존성 줄어듬.
+
+#### 6. Layered System (계층형 구조)
+
+ Client 입장에서는 REST API 서버만 호출.
+ REST 서버는 다중계층으로 구성될수 있음. 예를 들어, 보안/로드벨런싱/암호화/사용자 인증 등을 추가하여 구조상의 유연성을 줄수 있음.
+
+
+
+##  REST 구성
+
+#### 1. 자원(Resource) - URI
+
+모든 자원에 고유한 ID가 존재, 자원은 Server에 존재.
+ 자원을 구별하는 ID는 ‘/gropus/:group_id’와 같은 HTTP URI다.
+
+Client는 URI를 이용해서 자원을 지정하고 해당 자원의 정보에 대한 조작을 Server에 요청한다.
+
+#### 2. 행위(Verb) - HTTP Method (GET, PUT, POST, DELETE 등등)
+
+#### 3. 표현(Representations)
+
+ Client가 자원의 정보에 대한 조작을 요청하면 Server는 이에 적절한 응답(Representation)을 보낸다. REST에서 하나의 자원은 JSON, XML, TEXT, RSS등 여러 형태의 Representation으로 나타내어 질수 있다.
+
+JSON 또는 XML을 통해 데이터를 주고 받는 것이 일반적이다.
+
+​    
+
+## REST의 단점
+
+표준이 존재하지 않는다.
+
+사용할수 있는 Method가 4가지 밖에 없다.(HTTP Method형태 제한적)
+
+구형 브라우저가 아직 제대로 지원해주지 못한다. (PUT, DELETE, pushState 등)
+
+
+
+####  Translation Table의 5-column ==  NAT Router 의 5 tuple
+
+  \- Private address
+  \- Private port
+
+ \- External address
+
+ \- External port
+
+ \- Transport protocol
+
+​    
+
+## Delivery vs Forwarding
+
+Delivery는 전체까지의 전송을 나타내고 Forwarding은 next hop을 뜻한다.
+
+​    
+
+## Routing에서 3 Forwarding Rule
+
+#### Next-hop method
+
+ Root 기반이 아닌 Next-hop만 keeping 하는 방법
+
+#### Network-specific method
+
+ HostID가 필요없고 Network만 보는 방법, Host-specific routing table에서는 모든 정보를 가지고 있으므로 비효율적.
+ Host-specific routing은 특정 DNS서버만 따로 관리함.
+
+#### Default routing
+
+ 자신이 keep할거만 하고 나머지 Global은 default
+ ex) Gateway. . .   제일 강력한 Rule
+
+​    
+
+Classful address를 forwarding 하려면, - 3 columns 필요
+ Subnet address, Next-hop address, Interface number (ex. MAC주소, 이더넷) Classless address를 forwarding 하려면, - 4 columns 필요 Mask, Network address, Next-hop address, Interface number
+
+
+
 # NAT
 
 NAT Traversal 은 IPv4가 사라지고 IPv6가 오면 사라지는 기술이라고 이야기를 많이 했었는 데 NAT는 단순한 주소 부족 이유 보다는 보안상의 이유로 더 많이 사용하기 때문에 NAT Traversal 이슈는 여전히 남아 있을 수 있다.
@@ -763,10 +1865,11 @@ SIP(Session Initiation Protocol)과 같은 시그널링 프로토콜과 결합�
 
 1. IP/UDP에 실린 RTP 구조
    
-![img](README%20assets/3394_1.JPG)
-   
 
-   
+![img](README%20assets/3394_1.JPG)
+
+
+
 2. RTP 패킷 구조
 
    ![img](README%20assets/3394_2.JPG)
